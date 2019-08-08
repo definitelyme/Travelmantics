@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.ScrollView;
 
 import com.andela.brendan.travelmantics.Foundation.FirebaseUtil;
@@ -59,6 +60,8 @@ public class NewDealFragment extends Fragment {
     private Button saveCruise, deleteCruise;
     private EditText cruiseTitle, cruiseDescription, cruisePrice;
     private Uri IMAGE_URL;
+    private String FEEDBACK_MSG = "All good!";
+    private ProgressBar progressBar;
 
     public NewDealFragment() {
         // Required empty public constructor
@@ -98,15 +101,14 @@ public class NewDealFragment extends Fragment {
         cruisePrice = view.findViewById(R.id.cruise_price_input);
         saveCruise = view.findViewById(R.id.save_deal_btn);
         deleteCruise = view.findViewById(R.id.delete_deal_btn);
+        progressBar = view.findViewById(R.id.image_load_progress);
 
         if (deal.getId() != null)
             populateFields();
 
         selectImage.setOnClickListener(v -> imageIntent());
 
-        cruiseImage.setOnClickListener(v -> {
-            imageIntent();
-        });
+        cruiseImage.setOnClickListener(v -> imageIntent());
 
         saveCruise.setOnClickListener(v -> attemptSave());
 
@@ -135,6 +137,11 @@ public class NewDealFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == STORAGE_REQUEST_CODE && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            progressBar.setVisibility(View.VISIBLE); // Show Progress Bar
+            saveCruise.setEnabled(false); // Disable Save Button
+            selectImage.setVisibility(View.GONE); // Hide Select Image Button
+            cruiseImage.setVisibility(View.GONE); // Hide Image if Visible
+
             Uri imageUri = data.getData();
             StorageReference storageRef = FirebaseUtil.storageReference.child(imageUri.getLastPathSegment());
 
@@ -146,7 +153,10 @@ public class NewDealFragment extends Fragment {
                 return storageRef.getDownloadUrl();
             }).addOnCompleteListener(task -> {
                 task.addOnSuccessListener(taskSnapshot -> {
-                    IMAGE_URL = task.getResult();
+                    progressBar.setVisibility(View.GONE); // Hide Progress Bar
+                    saveCruise.setEnabled(true); // Enable Save Button
+
+                    IMAGE_URL = task.getResult(); // Set Current Image Url
 
                     String url = IMAGE_URL.toString();
 
@@ -159,7 +169,8 @@ public class NewDealFragment extends Fragment {
                 });
 
                 task.addOnFailureListener(e -> {
-                    Log.i("snapshot", e.getMessage());
+                    FEEDBACK_MSG = e.getMessage();
+                    updateUI();
                 });
             });
         }
@@ -205,9 +216,8 @@ public class NewDealFragment extends Fragment {
             picRef.delete().addOnSuccessListener(aVoid -> {
                 Log.i("delete", "File deleted!");
             }).addOnFailureListener(e -> {
-                Snackbar fileNotFoundSn = Snackbar.make(container, "File Not Found", BaseTransientBottomBar.LENGTH_LONG);
-                fileNotFoundSn.setAction("Okay", v -> fileNotFoundSn.dismiss());
-                fileNotFoundSn.show();
+                FEEDBACK_MSG = "File not found!";
+                updateUI();
             });
         }
     }
@@ -266,8 +276,8 @@ public class NewDealFragment extends Fragment {
 
     private void displayImage() {
         if (IMAGE_URL != null) {
-            selectImage.setVisibility(View.GONE);
             cruiseImage.setVisibility(View.VISIBLE);
+            selectImage.setVisibility(View.GONE); // Hide Select Image Button
 
             cruiseImage.getLayoutParams().height = 250;
             cruiseImage.getLayoutParams().width = 400;
@@ -278,6 +288,12 @@ public class NewDealFragment extends Fragment {
                     .load(IMAGE_URL)
                     .into(cruiseImage);
         }
+    }
+
+    private void updateUI() {
+        Snackbar feedback = Snackbar.make(container, FEEDBACK_MSG, BaseTransientBottomBar.LENGTH_LONG);
+        feedback.setAction("Okay", v -> feedback.dismiss());
+        feedback.show();
     }
 
     // Get the selected image file Extension from File Path URI.
