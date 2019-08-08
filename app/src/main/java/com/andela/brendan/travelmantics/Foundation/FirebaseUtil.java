@@ -47,7 +47,8 @@ public class FirebaseUtil {
                     FirebaseUser user = firebaseAuth.getCurrentUser(); // Current User
                     if (user == null) {
                         FirebaseUtil.authenticate(); // Show Auth screen if user is not authenticated
-                        Toast.makeText(context, "Welcome back " + firebaseAuth.getCurrentUser().getDisplayName() + "!", Toast.LENGTH_LONG).show();
+                        if (user != null)
+                            Toast.makeText(context, "Welcome back " + firebaseAuth.getCurrentUser().getDisplayName() + "!", Toast.LENGTH_LONG).show();
                     }
                 }
             };

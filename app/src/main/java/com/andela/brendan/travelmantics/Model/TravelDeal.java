@@ -9,6 +9,7 @@ public class TravelDeal implements Parcelable {
     private String description;
     private String price;
     private String imageStringUri;
+
     public static final Creator<TravelDeal> CREATOR = new Creator<TravelDeal>() {
         @Override
         public TravelDeal createFromParcel(Parcel in) {
@@ -24,15 +25,12 @@ public class TravelDeal implements Parcelable {
     public TravelDeal() {
     }
 
-    private String imageName;
-
-    public TravelDeal(String title, String price, String description, String stringUri, String imageName) {
+    public TravelDeal(String title, String price, String description, String stringUri) {
         this.setId(id);
         this.setTitle(title);
         this.setPrice(price);
         this.setDescription(description);
         this.setImageStringUri(stringUri);
-        this.setImageName(imageName);
     }
 
     // Parcelable Methods
@@ -42,7 +40,6 @@ public class TravelDeal implements Parcelable {
         description = in.readString();
         price = in.readString();
         imageStringUri = in.readString();
-        imageName = in.readString();
     }
 
     @Override
@@ -57,7 +54,6 @@ public class TravelDeal implements Parcelable {
         dest.writeString(description);
         dest.writeString(price);
         dest.writeString(imageStringUri);
-        dest.writeString(imageName);
     }
 
     // Getter & Setter methods
@@ -99,13 +95,5 @@ public class TravelDeal implements Parcelable {
 
     public void setImageStringUri(String imageStringUri) {
         this.imageStringUri = imageStringUri;
-    }
-
-    public String getImageName() {
-        return imageName;
-    }
-
-    public void setImageName(String imageName) {
-        this.imageName = imageName;
     }
 }

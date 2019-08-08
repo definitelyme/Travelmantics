@@ -20,6 +20,8 @@ import android.widget.ScrollView;
 import com.andela.brendan.travelmantics.Foundation.FirebaseUtil;
 import com.andela.brendan.travelmantics.Model.TravelDeal;
 import com.andela.brendan.travelmantics.R;
+import com.google.android.material.snackbar.BaseTransientBottomBar;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.StorageReference;
@@ -28,6 +30,7 @@ import com.squareup.picasso.Picasso;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
@@ -102,9 +105,7 @@ public class NewDealFragment extends Fragment {
         selectImage.setOnClickListener(v -> imageIntent());
 
         cruiseImage.setOnClickListener(v -> {
-            String dealImageName = deal.getImageName();
             imageIntent();
-            deleteImage(dealImageName);
         });
 
         saveCruise.setOnClickListener(v -> attemptSave());
@@ -146,11 +147,15 @@ public class NewDealFragment extends Fragment {
             }).addOnCompleteListener(task -> {
                 task.addOnSuccessListener(taskSnapshot -> {
                     IMAGE_URL = task.getResult();
+
                     String url = IMAGE_URL.toString();
-                    String imageName = task.getResult().getPath();
+
+                    if (deal.getImageStringUri() != null)
+                        deleteImage(deal.getImageStringUri()); // Delete Previous Image
+
                     deal.setImageStringUri(url);
-                    deal.setImageName(imageName);
-                    displayImage();
+
+                    displayImage(); // Display selected Image
                 });
 
                 task.addOnFailureListener(e -> {
@@ -188,19 +193,21 @@ public class NewDealFragment extends Fragment {
 
     private void attemptDelete() {
         dealsReference.child(deal.getId()).removeValue();
-        String dealImageName = deal.getImageName();
-        deleteImage(dealImageName);
+        if (deal.getImageStringUri() != null)
+            deleteImage(deal.getImageStringUri()); // Delete Previous Image
         backToList();
     }
 
     private void deleteImage(String name) {
         if (name != null && !TextUtils.isEmpty(name)) {
-            StorageReference picRef = FirebaseUtil.firebaseStorage.getReference().child(name);
+            StorageReference picRef = FirebaseUtil.firebaseStorage.getReferenceFromUrl(name);
 
             picRef.delete().addOnSuccessListener(aVoid -> {
                 Log.i("delete", "File deleted!");
             }).addOnFailureListener(e -> {
-                Log.i("delete:failure", e.getMessage());
+                Snackbar fileNotFoundSn = Snackbar.make(container, "File Not Found", BaseTransientBottomBar.LENGTH_LONG);
+                fileNotFoundSn.setAction("Okay", v -> fileNotFoundSn.dismiss());
+                fileNotFoundSn.show();
             });
         }
     }
@@ -215,8 +222,6 @@ public class NewDealFragment extends Fragment {
             dealsReference.child(key).setValue(deal);
         } else { // Update Existing Deal
             DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference(FragmentInterface.TRAVEL_DEAL_NODE).child(deal.getId());
-            String dealImageName = deal.getImageName();
-            deleteImage(dealImageName);
             dbRef.setValue(deal);
         }
 
@@ -266,6 +271,7 @@ public class NewDealFragment extends Fragment {
 
             cruiseImage.getLayoutParams().height = 250;
             cruiseImage.getLayoutParams().width = 400;
+            cruiseImage.setBackground(ContextCompat.getDrawable(activity, R.drawable.image_bg));
             cruiseImage.requestLayout();
 
             Picasso.with(activity)
