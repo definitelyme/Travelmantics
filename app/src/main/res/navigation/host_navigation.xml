@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/host_navigation"
+    app:startDestination="@id/dealsFragment">
+
+    <fragment
+        android:id="@+id/dealsFragment"
+        android:name="com.andela.brendan.travelmantics.Fragments.DealsFragment"
+        android:label="Travel Deals"
+        tools:layout="@layout/fragment_deals">
+        <action
+            android:id="@+id/action_dealsFragment_to_newDealFragment"
+            app:destination="@id/newDealFragment"
+            app:popUpTo="@+id/dealsFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/newDealFragment"
+        android:name="com.andela.brendan.travelmantics.Fragments.NewDealFragment"
+        android:label="New Travel Deal"
+        tools:layout="@layout/fragment_new_deal">
+        <argument
+            android:name="deal"
+            app:argType="com.andela.brendan.travelmantics.Model.TravelDeal"
+            app:nullable="true" />
+    </fragment>
+</navigation>

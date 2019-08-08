@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardElevation="8dp"
+    app:cardPreventCornerOverlap="true"
+    app:cardUseCompatPadding="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:weightSum="2">
+
+        <ImageView
+            android:id="@+id/deal_image"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.7"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_launcher_foreground"
+            tools:ignore="contentDescription" />
+
+        <LinearLayout
+            android:id="@+id/deal_content"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.3"
+            android:orientation="vertical"
+            android:padding="4dp"
+            android:weightSum="3">
+
+            <TextView
+                android:id="@+id/deal_title"
+                style="@style/TextAppearance.AppCompat.Body2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="start|center"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
+                android:text="@string/title_sample_string"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/deal_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:gravity="start|top"
+                android:justificationMode="inter_word"
+                android:maxLines="5"
+                android:padding="4dp"
+                android:text="@string/desc_sample_string"
+                android:textAllCaps="false"
+                android:textSize="16sp"
+                tools:ignore="UnusedAttribute" />
+
+            <TextView
+                android:id="@+id/deal_price"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:paddingStart="0dp"
+                android:paddingEnd="8dp"
+                android:paddingBottom="8dp"
+                android:text="@string/price_sample_string"
+                android:textColor="@color/colorAccent"
+                android:textSize="15sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>
