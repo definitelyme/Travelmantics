@@ -17,8 +17,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import androidx.annotation.NonNull;
-
 public class FirebaseUtil {
     private static final int RC_SIGN_IN = 123;
     public static FirebaseDatabase firebaseDatabase;
@@ -41,15 +39,13 @@ public class FirebaseUtil {
             util = new FirebaseUtil();
             firebaseDatabase = FirebaseDatabase.getInstance(); // FirebaseDatabase Instance
             firebaseAuth = FirebaseAuth.getInstance(); // FirebaseAuth Instance
-            authStateListener = new FirebaseAuth.AuthStateListener() { // This will create an onAuthStateChangeListener
-                @Override
-                public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                    FirebaseUser user = firebaseAuth.getCurrentUser(); // Current User
-                    if (user == null) {
-                        FirebaseUtil.authenticate(); // Show Auth screen if user is not authenticated
-                        if (user != null)
-                            Toast.makeText(context, "Welcome back " + firebaseAuth.getCurrentUser().getDisplayName() + "!", Toast.LENGTH_LONG).show();
-                    }
+            // This will create an onAuthStateChangeListener
+            authStateListener = firebaseAuth -> {
+                FirebaseUser user = firebaseAuth.getCurrentUser(); // Current User
+                if (user == null) {
+                    FirebaseUtil.authenticate(); // Show Auth screen if user is not authenticated
+                    if (user != null)
+                        Toast.makeText(context, "Welcome back " + firebaseAuth.getCurrentUser().getDisplayName() + "!", Toast.LENGTH_LONG).show();
                 }
             };
 

@@ -1,6 +1,5 @@
 package com.andela.brendan.travelmantics;
 
-import android.content.res.Resources;
 import android.net.Uri;
 import android.text.TextUtils;
 import android.view.View;
@@ -57,7 +56,6 @@ public class DealHolder extends RecyclerView.ViewHolder implements View.OnClickL
 
     private void displayImage(Uri uri) {
         if (uri != null) {
-            int width = Resources.getSystem().getDisplayMetrics().widthPixels;
             Picasso.with(dealImage.getContext())
                     .load(uri)
                     .into(dealImage);
