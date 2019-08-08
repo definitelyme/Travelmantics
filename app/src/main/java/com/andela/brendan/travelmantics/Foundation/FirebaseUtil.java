@@ -23,6 +23,7 @@ public class FirebaseUtil {
     private static final int RC_SIGN_IN = 123;
     public static FirebaseDatabase firebaseDatabase;
     public static DatabaseReference databaseReference;
+    public static FirebaseStorage firebaseStorage;
     public static StorageReference storageReference;
     public static ArrayList<TravelDeal> travelDeals;
     public static FirebaseAuth firebaseAuth;
@@ -44,12 +45,10 @@ public class FirebaseUtil {
                 @Override
                 public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                     FirebaseUser user = firebaseAuth.getCurrentUser(); // Current User
-                    if (user == null)
+                    if (user == null) {
                         FirebaseUtil.authenticate(); // Show Auth screen if user is not authenticated
-                    if (user != null) // Display a Toast
                         Toast.makeText(context, "Welcome back " + firebaseAuth.getCurrentUser().getDisplayName() + "!", Toast.LENGTH_LONG).show();
-
-//                    else Toast.makeText(context, "Welcome back!", Toast.LENGTH_LONG).show();
+                    }
                 }
             };
 
@@ -76,10 +75,7 @@ public class FirebaseUtil {
     private static void authenticate() {
         List<AuthUI.IdpConfig> providers = Arrays.asList(
                 new AuthUI.IdpConfig.EmailBuilder().build(),
-//                new AuthUI.IdpConfig.PhoneBuilder().build(),
                 new AuthUI.IdpConfig.GoogleBuilder().build());
-//                new AuthUI.IdpConfig.FacebookBuilder().build(),
-//                new AuthUI.IdpConfig.TwitterBuilder().build());
 
         context.startActivityForResult(
                 AuthUI.getInstance()
@@ -90,7 +86,7 @@ public class FirebaseUtil {
     }
 
     private static void connectStorage() {
-        FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
+        firebaseStorage = FirebaseStorage.getInstance();
         storageReference = firebaseStorage.getReference().child(FragmentInterface.TRAVEL_DEAL_FOLDER);
     }
 

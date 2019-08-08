@@ -21,8 +21,8 @@
 
             <ImageView
                 android:id="@+id/cruise_image_input"
-                android:layout_width="320dp"
-                android:layout_height="250dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:background="@drawable/image_bg"
                 android:contentDescription="@string/deal_image_string"
@@ -34,6 +34,7 @@
                 style="?attr/buttonBarButtonStyle"
                 android:layout_width="80dp"
                 android:layout_height="70dp"
+                android:layout_marginTop="50dp"
                 android:contentDescription="@string/upload_deal_image"
                 android:scaleType="centerCrop"
                 android:src="@drawable/upload_image_1" />

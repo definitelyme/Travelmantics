@@ -4,6 +4,11 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class TravelDeal implements Parcelable {
+    private String id;
+    private String title;
+    private String description;
+    private String price;
+    private String imageStringUri;
     public static final Creator<TravelDeal> CREATOR = new Creator<TravelDeal>() {
         @Override
         public TravelDeal createFromParcel(Parcel in) {
@@ -15,29 +20,34 @@ public class TravelDeal implements Parcelable {
             return new TravelDeal[size];
         }
     };
-    private String id;
-    private String title;
-    private String description;
-    private String price;
-    private String imageStringUri;
 
     public TravelDeal() {
     }
 
-    public TravelDeal(String title, String price, String description, String stringUri) {
+    private String imageName;
+
+    public TravelDeal(String title, String price, String description, String stringUri, String imageName) {
         this.setId(id);
         this.setTitle(title);
         this.setPrice(price);
         this.setDescription(description);
         this.setImageStringUri(stringUri);
+        this.setImageName(imageName);
     }
 
+    // Parcelable Methods
     protected TravelDeal(Parcel in) {
         id = in.readString();
         title = in.readString();
         description = in.readString();
         price = in.readString();
         imageStringUri = in.readString();
+        imageName = in.readString();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
     @Override
@@ -47,13 +57,10 @@ public class TravelDeal implements Parcelable {
         dest.writeString(description);
         dest.writeString(price);
         dest.writeString(imageStringUri);
+        dest.writeString(imageName);
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
+    // Getter & Setter methods
     public String getTitle() {
         return title;
     }
@@ -92,5 +99,13 @@ public class TravelDeal implements Parcelable {
 
     public void setImageStringUri(String imageStringUri) {
         this.imageStringUri = imageStringUri;
+    }
+
+    public String getImageName() {
+        return imageName;
+    }
+
+    public void setImageName(String imageName) {
+        this.imageName = imageName;
     }
 }

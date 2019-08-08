@@ -99,12 +99,12 @@ public class NewDealFragment extends Fragment {
         if (deal.getId() != null)
             populateFields();
 
-        selectImage.setOnClickListener(v -> {
-            imageIntent();
-        });
+        selectImage.setOnClickListener(v -> imageIntent());
 
         cruiseImage.setOnClickListener(v -> {
+            String dealImageName = deal.getImageName();
             imageIntent();
+            deleteImage(dealImageName);
         });
 
         saveCruise.setOnClickListener(v -> attemptSave());
@@ -147,7 +147,9 @@ public class NewDealFragment extends Fragment {
                 task.addOnSuccessListener(taskSnapshot -> {
                     IMAGE_URL = task.getResult();
                     String url = IMAGE_URL.toString();
+                    String imageName = task.getResult().getPath();
                     deal.setImageStringUri(url);
+                    deal.setImageName(imageName);
                     displayImage();
                 });
 
@@ -186,19 +188,35 @@ public class NewDealFragment extends Fragment {
 
     private void attemptDelete() {
         dealsReference.child(deal.getId()).removeValue();
+        String dealImageName = deal.getImageName();
+        deleteImage(dealImageName);
         backToList();
+    }
+
+    private void deleteImage(String name) {
+        if (name != null && !TextUtils.isEmpty(name)) {
+            StorageReference picRef = FirebaseUtil.firebaseStorage.getReference().child(name);
+
+            picRef.delete().addOnSuccessListener(aVoid -> {
+                Log.i("delete", "File deleted!");
+            }).addOnFailureListener(e -> {
+                Log.i("delete:failure", e.getMessage());
+            });
+        }
     }
 
     private void saveDeal(String title, String desc, String price) {
         deal.setTitle(title);
         deal.setDescription(desc);
-        deal.setPrice(String.format("NGN%s", price));
+        deal.setPrice(price);
 
         if (deal.getId() == null) { // Create a New Deal
             String key = dealsReference.push().getKey();
             dealsReference.child(key).setValue(deal);
         } else { // Update Existing Deal
             DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference(FragmentInterface.TRAVEL_DEAL_NODE).child(deal.getId());
+            String dealImageName = deal.getImageName();
+            deleteImage(dealImageName);
             dbRef.setValue(deal);
         }
 
@@ -245,6 +263,11 @@ public class NewDealFragment extends Fragment {
         if (IMAGE_URL != null) {
             selectImage.setVisibility(View.GONE);
             cruiseImage.setVisibility(View.VISIBLE);
+
+            cruiseImage.getLayoutParams().height = 250;
+            cruiseImage.getLayoutParams().width = 400;
+            cruiseImage.requestLayout();
+
             Picasso.with(activity)
                     .load(IMAGE_URL)
                     .into(cruiseImage);

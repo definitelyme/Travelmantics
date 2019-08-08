@@ -21,7 +21,7 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
         android:tint="@android:color/white"
-        app:maxImageSize="35dp"
+        app:maxImageSize="24dp"
         app:srcCompat="@android:drawable/ic_input_add" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
