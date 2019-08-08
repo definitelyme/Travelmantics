@@ -37,7 +37,7 @@ public class DealHolder extends RecyclerView.ViewHolder implements View.OnClickL
         dealArrayList = travelDeals; // Set the deals Array
 
         dealTitle.setText(deal.getTitle());
-        dealPrice.setText(deal.getPrice());
+        dealPrice.setText(String.format("NGN%s", deal.getPrice()));
         dealDescription.setText(deal.getDescription());
 
         String stringUri = deal.getImageStringUri();
