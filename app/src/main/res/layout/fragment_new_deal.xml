@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/fragment_new_deal"
@@ -35,14 +36,6 @@
                 android:layout_marginTop="50dp"
                 android:orientation="vertical">
 
-                <ProgressBar
-                    android:id="@+id/image_load_progress"
-                    style="?android:attr/progressDrawable"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:visibility="gone" />
-
                 <ImageButton
                     android:id="@+id/select_cruise_image_btn"
                     style="?attr/buttonBarButtonStyle"
@@ -51,6 +44,14 @@
                     android:contentDescription="@string/upload_deal_image"
                     android:scaleType="centerCrop"
                     android:src="@drawable/upload_image_1" />
+
+                <ProgressBar
+                    android:id="@+id/image_load_progress"
+                    style="?android:attr/progressDrawable"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:visibility="gone" />
             </LinearLayout>
         </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -143,6 +144,56 @@
                     app:layout_constraintTop_toTopOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/newDealLayout"
+            android:layout_marginTop="50dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <com.google.android.gms.ads.AdView
+                    android:id="@+id/ad_view1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    ads:adSize="BANNER"
+                    ads:adUnitId="ca-app-pub-5022917256332506/8343037067" />
+
+                <com.google.android.gms.ads.AdView
+                    android:id="@+id/ad_view2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/ad_view1"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="8dp"
+                    ads:adSize="BANNER"
+                    ads:adUnitId="ca-app-pub-5022917256332506/5525302030" />
+
+                <com.google.android.gms.ads.AdView
+                    android:id="@+id/ad_view3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/ad_view2"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="8dp"
+                    ads:adSize="BANNER"
+                    ads:adUnitId="ca-app-pub-5022917256332506/8343037067" />
+
+                <com.google.android.gms.ads.AdView
+                    android:id="@+id/ad_view4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/ad_view3"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="8dp"
+                    ads:adSize="BANNER"
+                    ads:adUnitId="ca-app-pub-5022917256332506/4716806764" />
+            </RelativeLayout>
+        </androidx.core.widget.NestedScrollView>
     </RelativeLayout>
 
 </ScrollView>

@@ -56,7 +56,6 @@ public class FirebaseUtil {
         databaseReference = firebaseDatabase.getReference().child(reference);
     }
 
-    @org.jetbrains.annotations.NotNull
     public static DatabaseReference getDatabaseNode(String reference, Activity activity) {
         context = activity; // Set the Caller Activity
 

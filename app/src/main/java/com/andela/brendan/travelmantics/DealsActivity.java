@@ -6,14 +6,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-
-import com.andela.brendan.travelmantics.Foundation.FirebaseUtil;
-import com.andela.brendan.travelmantics.Fragments.FragmentInterface;
-import com.firebase.ui.auth.AuthUI;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-
-import org.jetbrains.annotations.NotNull;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -23,6 +16,13 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
+
+import com.andela.brendan.travelmantics.Foundation.FirebaseUtil;
+import com.andela.brendan.travelmantics.Fragments.FragmentInterface;
+import com.firebase.ui.auth.AuthUI;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 
 public class DealsActivity extends AppCompatActivity implements FragmentInterface {
 
@@ -41,6 +41,9 @@ public class DealsActivity extends AppCompatActivity implements FragmentInterfac
         setupActionBar();
 
         FirebaseUtil.openDatabaseNode(FragmentInterface.TRAVEL_DEAL_NODE, this);
+
+        MobileAds.initialize(this, initializationStatus -> sendToast(DealsActivity.this, "Ads Initialized!"));
+        MobileAds.initialize(this, AD_APP_ID);
     }
 
     @Override
@@ -65,7 +68,7 @@ public class DealsActivity extends AppCompatActivity implements FragmentInterfac
     }
 
     @Override
-    public boolean onOptionsItemSelected(@NotNull MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_logout:
                 logout();

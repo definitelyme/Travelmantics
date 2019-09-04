@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 
 import com.andela.brendan.travelmantics.DealsAdapter;
 import com.andela.brendan.travelmantics.R;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import androidx.annotation.NonNull;
@@ -82,5 +84,4 @@ public class DealsFragment extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(activity, RecyclerView.VERTICAL, false);
         dealsRecycler.setLayoutManager(layoutManager);
     }
-
 }

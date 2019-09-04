@@ -21,6 +21,10 @@ import android.widget.ScrollView;
 import com.andela.brendan.travelmantics.Foundation.FirebaseUtil;
 import com.andela.brendan.travelmantics.Model.TravelDeal;
 import com.andela.brendan.travelmantics.R;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.database.DatabaseReference;
@@ -45,7 +49,7 @@ import static android.app.Activity.RESULT_OK;
  * {@link FragmentInterface} interface
  * to handle interaction events.
  */
-public class NewDealFragment extends Fragment {
+public class NewDealFragment extends Fragment implements FragmentInterface {
 
     private static final int STORAGE_REQUEST_CODE = 121;
     private DatabaseReference dealsReference;
@@ -110,7 +114,10 @@ public class NewDealFragment extends Fragment {
 
         cruiseImage.setOnClickListener(v -> imageIntent());
 
-        saveCruise.setOnClickListener(v -> attemptSave());
+        saveCruise.setOnClickListener(v -> {
+            setupInterstitialAd();
+            attemptSave();
+        });
 
         deleteCruise.setOnClickListener(v -> attemptDelete());
     }
@@ -302,5 +309,70 @@ public class NewDealFragment extends Fragment {
         MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
         // Returning the file Extension.
         return mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(uri));
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        initAdViews(container); // Show Banner Ads
+    }
+
+    // Banner Ads
+    private void initAdViews(View v) {
+        AdView adView1, adView2, adView3, adView4;
+
+        adView1 = v.findViewById(R.id.ad_view1);
+        adView2 = v.findViewById(R.id.ad_view2);
+        adView3 = v.findViewById(R.id.ad_view3);
+        adView4 = v.findViewById(R.id.ad_view4);
+
+        adView1.loadAd(adRequest());
+        adView2.loadAd(adRequest());
+        adView3.loadAd(adRequest());
+        adView4.loadAd(adRequest());
+    }
+
+    private AdRequest adRequest() {
+        return new AdRequest.Builder()
+                .build();
+    }
+
+    // Interstitial Ads
+    private void setupInterstitialAd() {
+        InterstitialAd interstitialAd = new InterstitialAd(activity);
+        interstitialAd.setAdUnitId(INTERSTITIAL_AD_3);
+        initInterstitial(interstitialAd);
+
+        interstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded() {
+                showInterstitial(interstitialAd);
+            }
+
+            @Override
+            public void onAdImpression() {
+                sendSnackbar(container, "Impression has been sent!");
+            }
+
+            @Override
+            public void onAdFailedToLoad(int i) {
+                sendSnackbar(container, "Interstitial failed to load with error code: " + i);
+                if (i == AdRequest.ERROR_CODE_NETWORK_ERROR) setupInterstitialAd();
+            }
+        });
+    }
+
+    private void showInterstitial(InterstitialAd interstitialAd) {
+        // Show the ad if it's ready. Otherwise toast and restart the game.
+        if (interstitialAd != null && interstitialAd.isLoaded()) {
+            interstitialAd.show();
+        } else {
+            sendToast(activity, "The interstitial wasn't loaded yet.");
+        }
+    }
+
+    private void initInterstitial(InterstitialAd interstitialAd){
+        AdRequest adRequest = new AdRequest.Builder().build();
+        interstitialAd.loadAd(adRequest);
     }
 }
